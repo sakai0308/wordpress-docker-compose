@@ -1,0 +1,51 @@
+version: "2"
+services:
+  # mysql settings
+  mysql:
+    image: mysql:latest
+    environment:
+      - MYSQL_ROOT_USER=root
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=wp_db
+      - MYSQL_USER=wp_user
+      - MYSQL_PASSWORD=root
+    volumes:
+      - ./config/docker/mysql/conf.d/my.cnf:/etc/mysql/conf.d/my.cnf
+      - ./config/docker/mysql/data:/var/lib/mysql
+    ports:
+      - 3306:3306
+
+  # Wordpress settings
+  wordpress:
+    build: .
+    ports:
+      - 80:80
+    depends_on:
+      - mysql
+    links:
+      - mysql
+      - phpmyadmin
+    environment:
+      - WORDPRESS_DB_HOST=mysql:3306
+      - WORDPRESS_DB_NAME=wp_db
+      - WORDPRESS_DB_USER=wp_user
+      - WORDPRESS_DB_PASSWORD=root
+    volumes:
+      - ./themes:/var/www/html/wp-content/themes
+      # 以下を追加
+      - ./uploads:/var/www/html/wp-content/uploads
+      - ./plugins:/var/www/html/wp-content/plugins
+  # phpmyadmin settings
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    environment:
+      - PMA_ARBITRARY=1
+      - PMA_HOST=mysql
+      - PMA_USER=root
+      - PMA_PASSWORD=root
+    links:
+      - mysql
+    ports:
+      - 8080:80
+    volumes:
+      - /sessions
