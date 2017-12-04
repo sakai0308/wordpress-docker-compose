@@ -16,7 +16,7 @@ services:
       - 3306:3306
 
   # Wordpress settings
-  wordpress:
+  web:
     build: .
     ports:
       - 80:80
@@ -35,17 +35,3 @@ services:
       # 以下を追加
       - ./uploads:/var/www/html/wp-content/uploads
       - ./plugins:/var/www/html/wp-content/plugins
-  # phpmyadmin settings
-  phpmyadmin:
-    image: phpmyadmin/phpmyadmin
-    environment:
-      - PMA_ARBITRARY=1
-      - PMA_HOST=mysql
-      - PMA_USER=root
-      - PMA_PASSWORD=root
-    links:
-      - mysql
-    ports:
-      - 8080:80
-    volumes:
-      - /sessions

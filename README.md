@@ -7,9 +7,12 @@ docker-compose build
 docker-compose up -d  
 docker-compose ps
 
+## コンソールにアクセス
+docker-compose exec web bash
+
 ## dockerコンテナ停止
 docker-compose down
 
 ## dockerイメージを削除する時
 docker images  
-docker rmi wordpressdockercompose_wordpress
+docker rmi xxx
